@@ -57,7 +57,7 @@ mod tests {
 
         let res = schema.execute(query).await;
 
-        assert!(res.errors.len() > 0);
+        assert!(!res.errors.is_empty());
         let error_message = &res.errors[0].message;
         assert!(error_message.contains("Name cannot be empty"));
     }

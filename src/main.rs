@@ -4,7 +4,7 @@ mod infrastructure;
 mod interfaces;
 
 use std::net::SocketAddr;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::fmt;
 
 use infrastructure::graphql::create_schema;
 use interfaces::api::create_router;
@@ -12,13 +12,7 @@ use interfaces::api::create_router;
 // Wrapper for easier testing
 #[cfg(not(test))]
 pub fn init_tracing() {
-    tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "rust_ddd_template=debug,tower_http=debug".into()),
-        )
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+    fmt::init();
 }
 
 #[cfg(test)]
@@ -67,14 +61,14 @@ mod tests {
     fn test_build_app() {
         // Test that we can create the app without errors
         let _app = build_app();
-        assert!(true); // If we got here, creation succeeded
+        // Test passes if build_app() doesn't panic
     }
 
     #[test]
     fn test_init_tracing() {
         // Just call the function to ensure it doesn't panic
         init_tracing();
-        assert!(true);
+        // Test passes if init_tracing() doesn't panic
     }
 
     #[tokio::test]

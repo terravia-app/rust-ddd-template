@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: fmt
+        name: fmt
+        description: Format code with rustfmt
+        entry: cargo fmt --
+        language: rust
+        types: [rust]
+
+      - id: clippy
+        name: clippy
+        description: Run clippy linter
+        entry: cargo clippy --workspace -- -D warnings
+        language: rust
+        types: [rust]
+        pass_filenames: false
+
+      - id: test
+        name: test
+        description: Run cargo tests
+        entry: cargo test --workspace --bin rust-ddd-template --quiet
+        language: rust
+        types: [rust]
+        pass_filenames: false
+
+      - id: coverage
+        name: coverage
+        description: Check test coverage
+        entry: cargo tarpaulin --ignore-tests --fail-under 80
+        language: rust
+        types: [rust]
+        pass_filenames: false

@@ -40,6 +40,7 @@ src/
 
 - Rust (latest stable version)
 - Cargo
+- pre-commit (for development workflow)
 
 ### Running the Application
 
@@ -56,7 +57,9 @@ cargo run
 
 ```graphql
 {
-  hello(name: "World")
+  hello(name: "World") {
+    message
+  }
 }
 ```
 
@@ -74,9 +77,49 @@ This will return:
 
 ## Development
 
+### Optimized Development Workflow
+
+This project uses an optimized workflow to balance code quality with development efficiency:
+
+#### 1. Fast Pre-commit Hooks
+
+Only lightweight checks run on every commit:
+- File formatting (end-of-file, whitespace)
+- Code formatting (`cargo fmt`)
+- Clippy on changed files only
+
+This ensures quick commits while maintaining basic code quality.
+
+#### 2. Comprehensive Pre-push Hooks
+
+More thorough checks run before pushing to remote:
+- Full workspace clippy
+- All tests
+- Code coverage check
+
+These hooks won't slow down your commit process but ensure code quality before sharing.
+
+#### 3. GitHub Actions CI
+
+The CI pipeline runs in GitHub Actions with:
+- Check: Format and clippy
+- Test: Run all tests
+- Coverage: Ensure 80% minimum coverage
+
+#### Setup
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Install both pre-commit and pre-push hooks
+pre-commit install
+pre-commit install --hook-type pre-push
+```
+
 ### Quality Checks
 
-The project uses several quality checks that can be run with cargo commands:
+Individual quality checks can be run manually:
 
 ```bash
 # Run formatting
@@ -94,20 +137,9 @@ cargo clippy -- -D warnings
 # Run tests
 cargo test
 
-# Run all checks in sequence
-cargo fmt && cargo clippy -- -D warnings && cargo test
+# Check coverage
+cargo tarpaulin --ignore-tests
 ```
-
-### Pre-commit Hooks
-
-The project is configured with pre-commit hooks to ensure code quality. After cloning the repository:
-
-```bash
-# Install pre-commit hooks
-pre-commit install
-```
-
-This will automatically check formatting, run clippy, and execute tests before each commit.
 
 ### Building for Production
 

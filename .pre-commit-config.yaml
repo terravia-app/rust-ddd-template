@@ -6,8 +6,10 @@ repos:
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+
   - repo: local
     hooks:
+      # Fast hooks - run on every commit
       - id: fmt
         name: fmt
         description: Format code with rustfmt
@@ -15,26 +17,35 @@ repos:
         language: rust
         types: [rust]
 
-      - id: clippy
-        name: clippy
-        description: Run clippy linter
+      - id: clippy-changed
+        name: clippy (changed files only)
+        description: Run clippy linter on changed files only
+        entry: bash -c 'FILES=$(git diff --name-only --cached | grep "\.rs$" | xargs); if [ -n "$FILES" ]; then cargo clippy --quiet -- -D warnings; fi'
+        language: system
+        pass_filenames: false
+        verbose: true
+
+      # Heavier hooks - run on push only
+      - id: clippy-full
+        name: clippy (full workspace)
+        description: Run clippy linter on the entire workspace
         entry: cargo clippy --workspace -- -D warnings
         language: rust
-        types: [rust]
         pass_filenames: false
+        stages: [push]
 
       - id: test
         name: test
         description: Run cargo tests
-        entry: cargo test --workspace --bin rust-ddd-template --quiet
+        entry: cargo test --workspace
         language: rust
-        types: [rust]
         pass_filenames: false
+        stages: [push]
 
       - id: coverage
         name: coverage
         description: Check test coverage
         entry: cargo tarpaulin --ignore-tests --fail-under 80
         language: rust
-        types: [rust]
         pass_filenames: false
+        stages: [push]

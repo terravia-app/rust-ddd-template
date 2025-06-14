@@ -25,6 +25,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Run linter: `cargo clippy -- -D warnings`
 - Run all quality checks: `cargo fmt && cargo clippy -- -D warnings && cargo test`
 
+## Development Workflow
+
+This project uses an optimized workflow to balance code quality with development efficiency:
+
+### Pre-commit Hooks (Fast)
+
+Only lightweight checks run on every commit:
+- File formatting (end-of-file, whitespace)
+- Code formatting (`cargo fmt`)
+- Clippy on changed files only
+
+Install hooks:
+```bash
+pre-commit install
+pre-commit install --hook-type pre-push
+```
+
+### Pre-push Hooks (Comprehensive)
+
+More comprehensive checks run before pushing to remote:
+- Full workspace clippy
+- All tests
+- Code coverage check
+
+These hooks won't slow down your commit process but ensure code quality before sharing.
+
+### GitHub Actions (CI/CD)
+
+The CI pipeline runs in GitHub Actions with the following jobs:
+- Check: Format and clippy
+- Test: Run all tests
+- Coverage: Ensure 80% minimum coverage and upload to Codecov
+
+This setup offloads intensive checks from local development to CI.
+
 ## Architecture Overview
 
 This project follows Domain-Driven Design (DDD) principles with a clean architecture approach:

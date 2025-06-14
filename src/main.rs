@@ -4,7 +4,7 @@ mod infrastructure;
 mod interfaces;
 
 use std::net::SocketAddr;
-use tracing_subscriber::fmt;
+// No imports needed for tracing_subscriber
 
 use infrastructure::graphql::create_schema;
 use interfaces::api::create_router;
@@ -12,7 +12,7 @@ use interfaces::api::create_router;
 // Wrapper for easier testing
 #[cfg(not(test))]
 pub fn init_tracing() {
-    fmt::init();
+    tracing_subscriber::fmt::init();
 }
 
 #[cfg(test)]

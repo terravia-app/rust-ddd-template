@@ -124,3 +124,33 @@ The application uses a structured approach to errors:
 - Unit tests focus on domain and application logic
 - Each layer has its own tests
 - Minimum code coverage requirement: 80%
+
+## Learnings and Best Practices
+
+> This section captures insights gained while working with this codebase. Feel free to expand it as you discover more patterns and solutions.
+
+### Development Workflow Optimization
+
+- **Progressive Validation**: The best workflow uses fast checks for commits, thorough checks for pushes, and complete validation in CI
+- **Performance**: For large codebases, running clippy only on changed files can reduce commit times from minutes to seconds
+- **Pre-commit Configuration**: Use `stages: [pre-push]` for push hooks, not the deprecated `stages: [push]`
+
+### Rust-Specific Patterns
+
+- **Imports**: Prefer fully qualified paths (e.g., `tracing_subscriber::fmt::init()`) over imports for single-use items
+- **Collection Checks**: Use `!collection.is_empty()` rather than `collection.len() > 0` for better readability
+- **Test Assertions**: Avoid `assert!(true)` statements; instead use comments to explain what would cause failure
+- **Tracing Setup**: Simple applications can use `tracing_subscriber::fmt::init()` without complex configuration
+
+### CI/CD Practices
+
+- **Job Isolation**: Separate CI into distinct jobs (check, test, coverage) for clearer error reporting
+- **Dependency Caching**: Cache Cargo artifacts to reduce build times
+- **Optional Integrations**: Make third-party services like Codecov conditional to avoid CI failures
+- **Git Practices**: Always specify remote and branch names explicitly when pushing (`git push origin main`)
+
+### GraphQL Best Practices
+
+- **Error Handling**: Map domain-specific errors to GraphQL errors with clear messages
+- **Testing**: Test both successful queries and error cases
+- **Schema Design**: Start with minimal schema and expand based on actual needs

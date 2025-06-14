@@ -32,7 +32,7 @@ repos:
         entry: cargo clippy --workspace -- -D warnings
         language: rust
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
 
       - id: test
         name: test
@@ -40,7 +40,7 @@ repos:
         entry: cargo test --workspace
         language: rust
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
 
       - id: coverage
         name: coverage
@@ -48,4 +48,4 @@ repos:
         entry: cargo tarpaulin --ignore-tests --fail-under 80
         language: rust
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
